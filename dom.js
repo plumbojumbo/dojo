@@ -175,8 +175,12 @@ define(["./sniff", "./_base/window"],
 
 	var cssUserSelect = has("css-user-select");
 	dom.setSelectable = cssUserSelect ? function(node, selectable){
+		// In Firefox < 21, "-moz-none" allows for sub-nodes to be set
+		// selectable, "none" doesn't.
+		// In Firefox >= 21, "none" behaves like "-moz-none".
+		var none = has("ff") < 21 ? "-moz-none" : "none";
 		// css-user-select returns a (possibly vendor-prefixed) CSS property name
-		dom.byId(node).style[cssUserSelect] = selectable ? "" : "none";
+		dom.byId(node).style[cssUserSelect] = selectable ? "" : none;
 	} : function(node, selectable){
 		node = dom.byId(node);
 
